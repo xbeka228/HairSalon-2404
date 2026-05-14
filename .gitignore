@@ -1,0 +1,10 @@
+.DS_Store
+.claude/
+
+bin/
+obj/
+
+*.user
+*.suo
+*.rsuser
+

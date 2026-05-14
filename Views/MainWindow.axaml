@@ -1,0 +1,303 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HairSalon.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+        x:Class="HairSalon.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Парикмахерская"
+        Width="1000" Height="700"
+        MinWidth="800" MinHeight="600"
+        Background="White">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <!-- Header -->
+        <Border DockPanel.Dock="Top" Background="#E8EAF6" Padding="20,12">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Выйти" Command="{Binding LogoutCommand}"
+                        Background="#EF5350" Foreground="White" Padding="16,6"
+                        FontSize="13" CornerRadius="4" VerticalAlignment="Center"/>
+                <TextBlock Text="Парикмахерская"
+                           FontSize="24" FontWeight="Bold" Foreground="#3949AB"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Status bar -->
+        <Border DockPanel.Dock="Bottom" Background="#E8EAF6" Padding="12,6">
+            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#283593"/>
+        </Border>
+
+        <!-- Tabs -->
+        <TabControl Margin="8">
+
+            <!-- ==================== TAB: ЗАПИСИ ==================== -->
+            <TabItem Header="  Записи  " FontSize="15">
+                <Grid ColumnDefinitions="*,Auto,350" Margin="8">
+                    <!-- Appointment list -->
+                    <DockPanel Grid.Column="0">
+                        <TextBlock DockPanel.Dock="Top" Text="Все записи" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                            <Button Content="Выполнена" Command="{Binding CompleteAppointmentCommand}"
+                                    Background="#66BB6A" Foreground="White" Padding="14,8" CornerRadius="4"/>
+                            <Button Content="Отменить" Command="{Binding CancelAppointmentCommand}"
+                                    Background="#FFA726" Foreground="White" Padding="14,8" CornerRadius="4"/>
+                            <Button Content="Удалить" Command="{Binding DeleteAppointmentCommand}"
+                                    Background="#EF5350" Foreground="White" Padding="14,8" CornerRadius="4"/>
+                        </StackPanel>
+                        <ListBox ItemsSource="{Binding Appointments}" SelectedItem="{Binding SelectedAppointment}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="8,6" Margin="0,2" CornerRadius="6" Background="#F5F7FA">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding DateTime, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                                                           FontWeight="SemiBold" FontSize="14"/>
+                                                <Border Background="#C5CAE9" CornerRadius="4" Padding="6,2">
+                                                    <TextBlock Text="{Binding Status}" FontSize="12"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,4,0,0">
+                                                <TextBlock Text="Клиент:" Foreground="#9E9E9E" FontSize="12"/>
+                                                <TextBlock Text="{Binding Client.Name}" FontSize="12"/>
+                                                <TextBlock Text=" | Мастер:" Foreground="#9E9E9E" FontSize="12"/>
+                                                <TextBlock Text="{Binding Master.Name}" FontSize="12"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="Услуга:" Foreground="#9E9E9E" FontSize="12"/>
+                                                <TextBlock Text="{Binding Service.Name}" FontSize="12"/>
+                                                <TextBlock Text=" |" Foreground="#9E9E9E" FontSize="12"/>
+                                                <TextBlock Text="{Binding Service.Price, StringFormat='{}{0:N0} тг.'}"
+                                                           FontSize="12" Foreground="#3949AB"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+
+                    <GridSplitter Grid.Column="1" Width="2" Margin="8,0" Background="#E0E0E0"/>
+
+                    <!-- New appointment form -->
+                    <Border Grid.Column="2" Background="#F5F7FA" CornerRadius="8" Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Новая запись" FontSize="16" FontWeight="SemiBold"/>
+
+                            <TextBlock Text="Клиент:" FontSize="13"/>
+                            <ComboBox ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}"
+                                      HorizontalAlignment="Stretch" PlaceholderText="Выберите клиента">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <TextBlock Text="Мастер:" FontSize="13"/>
+                            <ComboBox ItemsSource="{Binding Masters}" SelectedItem="{Binding SelectedMaster}"
+                                      HorizontalAlignment="Stretch" PlaceholderText="Выберите мастера">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Specialization}" FontSize="11" Foreground="#9E9E9E"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <TextBlock Text="Услуга:" FontSize="13"/>
+                            <ComboBox ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedService}"
+                                      HorizontalAlignment="Stretch" PlaceholderText="Выберите услугу">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Price, StringFormat='{}{0:N0} тг.'}" Foreground="#9E9E9E"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <TextBlock Text="Дата:" FontSize="13"/>
+                            <DatePicker SelectedDate="{Binding SelectedDate}" HorizontalAlignment="Stretch"/>
+
+                            <TextBlock Text="Время:" FontSize="13"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <ComboBox ItemsSource="{Binding Hours}" SelectedItem="{Binding SelectedHour}" Width="80"/>
+                                <TextBlock Text=":" VerticalAlignment="Center" FontSize="16"/>
+                                <ComboBox ItemsSource="{Binding Minutes}" SelectedItem="{Binding SelectedMinute}" Width="80"/>
+                            </StackPanel>
+
+                            <Button Content="Записать" Command="{Binding AddAppointmentCommand}"
+                                    Background="#5C6BC0" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,8,0,0" CornerRadius="6"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ==================== TAB: КЛИЕНТЫ ==================== -->
+            <TabItem Header="  Клиенты  " FontSize="15">
+                <Grid ColumnDefinitions="*,Auto,350" Margin="8">
+                    <DockPanel Grid.Column="0">
+                        <TextBlock DockPanel.Dock="Top" Text="Список клиентов" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <Border BorderThickness="1" BorderBrush="#E0E0E0" CornerRadius="6">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top" ColumnDefinitions="50,*,180" Background="#E8EAF6">
+                                    <TextBlock Grid.Column="0" Text="ID" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="1" Text="Имя" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="2" Text="Телефон" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                </Grid>
+                                <ListBox ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClientInList}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="50,*,180">
+                                                <TextBlock Grid.Column="0" Text="{Binding Id}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Phone}" Padding="4,2" FontSize="13"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
+
+                    <GridSplitter Grid.Column="1" Width="2" Margin="8,0" Background="#E0E0E0"/>
+
+                    <Border Grid.Column="2" Background="#F5F7FA" CornerRadius="8" Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Добавить клиента" FontSize="16" FontWeight="SemiBold"/>
+                            <TextBlock Text="Имя:" FontSize="13"/>
+                            <TextBox Text="{Binding NewClientName}" PlaceholderText="Фамилия Имя"/>
+                            <TextBlock Text="Телефон:" FontSize="13"/>
+                            <TextBox Text="{Binding NewClientPhone}" PlaceholderText="+7 (7__) ___-__-__"/>
+                            <Button Content="Добавить клиента" Command="{Binding AddClientCommand}"
+                                    Background="#5C6BC0" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,8,0,0" CornerRadius="6"/>
+                            <Button Content="Удалить клиента" Command="{Binding DeleteClientCommand}"
+                                    Background="#EF5350" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,4,0,0" CornerRadius="6"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ==================== TAB: МАСТЕРА ==================== -->
+            <TabItem Header="  Мастера  " FontSize="15">
+                <Grid ColumnDefinitions="*,Auto,350" Margin="8">
+                    <DockPanel Grid.Column="0">
+                        <TextBlock DockPanel.Dock="Top" Text="Список мастеров" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <Border BorderThickness="1" BorderBrush="#E0E0E0" CornerRadius="6">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top" ColumnDefinitions="50,*,160,100" Background="#E8EAF6">
+                                    <TextBlock Grid.Column="0" Text="ID" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="1" Text="Имя" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="2" Text="Специализация" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="3" Text="Стаж (лет)" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                </Grid>
+                                <ListBox ItemsSource="{Binding Masters}" SelectedItem="{Binding SelectedMasterInList}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="50,*,160,100">
+                                                <TextBlock Grid.Column="0" Text="{Binding Id}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Specialization}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding ExperienceYears}" Padding="4,2" FontSize="13"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
+
+                    <GridSplitter Grid.Column="1" Width="2" Margin="8,0" Background="#E0E0E0"/>
+
+                    <Border Grid.Column="2" Background="#F5F7FA" CornerRadius="8" Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Добавить мастера" FontSize="16" FontWeight="SemiBold"/>
+                            <TextBlock Text="Имя:" FontSize="13"/>
+                            <TextBox Text="{Binding NewMasterName}" PlaceholderText="Фамилия Имя"/>
+                            <TextBlock Text="Специализация:" FontSize="13"/>
+                            <TextBox Text="{Binding NewMasterSpecialization}" PlaceholderText="Стрижки, укладки..."/>
+                            <TextBlock Text="Стаж (лет):" FontSize="13"/>
+                            <TextBox Text="{Binding NewMasterExperience}" PlaceholderText="5"/>
+                            <Button Content="Добавить мастера" Command="{Binding AddMasterCommand}"
+                                    Background="#5C6BC0" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,8,0,0" CornerRadius="6"/>
+                            <Button Content="Удалить мастера" Command="{Binding DeleteMasterCommand}"
+                                    Background="#EF5350" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,4,0,0" CornerRadius="6"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- ==================== TAB: УСЛУГИ ==================== -->
+            <TabItem Header="  Услуги  " FontSize="15">
+                <Grid ColumnDefinitions="*,Auto,350" Margin="8">
+                    <DockPanel Grid.Column="0">
+                        <TextBlock DockPanel.Dock="Top" Text="Прайс-лист" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                        <Border BorderThickness="1" BorderBrush="#E0E0E0" CornerRadius="6">
+                            <DockPanel>
+                                <Grid DockPanel.Dock="Top" ColumnDefinitions="50,*,120,150" Background="#E8EAF6">
+                                    <TextBlock Grid.Column="0" Text="ID" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="1" Text="Название" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="2" Text="Цена (тг.)" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                    <TextBlock Grid.Column="3" Text="Длит. (мин)" FontWeight="SemiBold" Padding="8,6" FontSize="12"/>
+                                </Grid>
+                                <ListBox ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedServiceInList}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="50,*,120,150">
+                                                <TextBlock Grid.Column="0" Text="{Binding Id}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Price, StringFormat='{}{0:N0}'}" Padding="4,2" FontSize="13"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding DurationMinutes}" Padding="4,2" FontSize="13"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </DockPanel>
+                        </Border>
+                    </DockPanel>
+
+                    <GridSplitter Grid.Column="1" Width="2" Margin="8,0" Background="#E0E0E0"/>
+
+                    <Border Grid.Column="2" Background="#F5F7FA" CornerRadius="8" Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Добавить услугу" FontSize="16" FontWeight="SemiBold"/>
+                            <TextBlock Text="Название:" FontSize="13"/>
+                            <TextBox Text="{Binding NewServiceName}" PlaceholderText="Название услуги"/>
+                            <TextBlock Text="Цена (тг.):" FontSize="13"/>
+                            <TextBox Text="{Binding NewServicePrice}" PlaceholderText="5000"/>
+                            <TextBlock Text="Длительность (мин.):" FontSize="13"/>
+                            <TextBox Text="{Binding NewServiceDuration}" PlaceholderText="60"/>
+                            <Button Content="Добавить услугу" Command="{Binding AddServiceCommand}"
+                                    Background="#5C6BC0" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,8,0,0" CornerRadius="6"/>
+                            <Button Content="Удалить услугу" Command="{Binding DeleteServiceCommand}"
+                                    Background="#EF5350" Foreground="White"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                    Padding="0,10" FontSize="15" Margin="0,4,0,0" CornerRadius="6"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>

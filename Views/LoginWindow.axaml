@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HairSalon.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="380"
+        x:Class="HairSalon.Views.LoginWindow"
+        x:DataType="vm:LoginViewModel"
+        Title="Вход — Парикмахерская"
+        Width="420" Height="380"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:LoginViewModel/>
+    </Design.DataContext>
+
+    <Border Background="White" Padding="40">
+        <StackPanel VerticalAlignment="Center" Spacing="16">
+            <TextBlock Text="Парикмахерская"
+                       FontSize="26" FontWeight="Bold"
+                       Foreground="#5C6BC0"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Вход в систему"
+                       FontSize="14" Foreground="#9E9E9E"
+                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+            <TextBlock Text="Логин:" FontSize="13"/>
+            <TextBox Text="{Binding Username}" PlaceholderText="admin" FontSize="14"/>
+
+            <TextBlock Text="Пароль:" FontSize="13"/>
+            <TextBox Text="{Binding Password}" PasswordChar="*" PlaceholderText="Пароль" FontSize="14"/>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#E53935" FontSize="13"
+                       IsVisible="{Binding ErrorMessage.Length}"/>
+
+            <Button Content="Войти" Command="{Binding LoginCommand}"
+                    Background="#5C6BC0" Foreground="White"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Padding="0,12" FontSize="16" Margin="0,8,0,0" CornerRadius="6"/>
+        </StackPanel>
+    </Border>
+</Window>
